@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email</title>
+    
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            background: #222;
+            color: #fff;
+            font-family: system-ui;
+        }
+        .app{
+            width: 80%;
+            margin: auto;
+        }
+        .head{
+            text-align: center;
+            text-transform: uppercase;
+            margin: 10px 0;
+        }
+        textarea{
+            width: 100%;
+            outline: none;
+            border: none;
+            background: #111;
+            color: #fff;
+            margin: 4px 0;
+            border-radius: 4px;
+            padding: 4px;
+        }
+        textarea:focus{
+            background-color: #000;
+            transform: scale(1.1);
+        }
+        #btn{
+            width: 100%;
+            height: 30px;
+            border: none;
+            cursor: pointer;
+            border-radius: 15px;
+            background: rgb(52, 1, 97);
+            color: #fff;
+            margin-top: 20px;
+        }
+        #btn:hover{
+            background: rgb(67, 7, 120);
+        }
+        table{
+            width: 100%;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .emails{
+            height: 200px;
+            overflow: hidden;
+            overflow-y: scroll;
+        }
+        #txtNumber{
+            text-align: left;
+        }
+        h3{
+            text-align: center;
+        }
+    </style>
+   
+
+</head>
+<body>
+    <div class="app">
+      
+      
+        <div class="head">
+            <h2>Send Emails</h2>
+
+        </div>
+
+
+        <div class="inputs">
+            {% if Customers %}
+            <form method="get">
+                <textarea name="textt" id="txt" cols="70" rows="10" onchange="word_calcul(this)" required></textarea>
+                <div id="txtNumber"><h6> <span id="number"> 0</span>/20</h6></div>
+                <input type="checkbox" onchange="check_all(this)"><span>  Check them All</span>
+                
+                <div class="emails">
+                    <table>
+                        <tr>
+                            <th>CHOOSE</th>
+                            <th>EMAIL</th>
+                            <th>FIRST NAME</th>
+                            <th>LAST NAME</th>
+                        </tr>
+                    {% for i in Customers %}
+                    <tr>
+                    <th><input type="checkbox" name="emails" value={{i.Email}}></th>
+                    <th><label>{{i.Email}}</label></th>
+                    <th><label>{{i.FirstName}}</label></th>
+                    <th><label>{{i.SecondName}}</label></th>
+                    </tr>
+                    {% endfor %}
+                    </table>
+                </div>
+
+                <input type="submit" id="btn" value="SEND MESSAGE">
+
+            </form>
+            {% else %}
+            <h3>There is no data </h3>
+            {% endif %}
+            
+
+        </div>
+
+    
+
+
+    </div>
+
+    
+
+    <script>
+        var checkboxes = document.getElementsByName("emails");
+
+        function check_all(myCheckbox){
+            
+            if(myCheckbox.checked == true){
+                checkboxes.forEach(function(check){
+                        check.checked = true;
+                });
+            }else{
+                checkboxes.forEach(checkbox => checkbox.checked = false);
+            }
+    
+        }
+        function word_calcul(text){
+            let nstr = getCount(text.value) ;
+            //console.log(getCount(str));
+            let n = document.getElementById('number');
+            n.innerHTML = nstr;
+
+            let btn = document.getElementById("btn");
+            if(nstr > 20){
+                btn.disabled = true;
+                btn.value = 'no more then 20 word';
+            }else{
+                btn.disabled = false;
+                btn.value = 'SEND MESSAGE';
+            }
+    
+        }
+
+        function getCount(str) {
+            return str.split(' ').filter(function(num) {
+                    return num != ''}
+                    ).length;
+        }
+        
+
+    </script>
+
+</body>
+</html>

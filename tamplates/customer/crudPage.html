@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email</title>
+    
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            background: #222;
+            color: #fff;
+            font-family: system-ui;
+        }
+        .app{
+            width: 80%;
+            margin: auto;
+        }
+        .head{
+            text-align: center;
+            text-transform: uppercase;
+            margin: 10px 0;
+        }
+        .inputs_data{
+            width: 100%;
+            height: 25px;
+            outline: none;
+            border: none;
+            background: #111;
+            color: #fff;
+            margin: 4px 0;
+            border-radius: 4px;
+            padding: 4px;
+        }
+        .inputs_data:focus{
+            background-color: #000;
+            transform: scale(1.1);
+        }
+        #btn1,#btn2{
+            width: 100%;
+            height: 30px;
+            border: none;
+            cursor: pointer;
+            border-radius: 15px;
+            background: rgb(52, 1, 97);
+            color: #fff;
+            margin-top: 20px;
+        }
+        .update_button{
+            width: 80%;
+            height: 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 15px;
+            background: rgb(52, 1, 97);
+            color: #fff;
+           
+        }
+        #btn1:hover,#btn2:hover,.update_button:hover{
+            background: rgb(67, 7, 120);
+        }
+        table{
+            width: 100%;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .emails{
+            height: 200px;
+            overflow: hidden;
+            overflow-y: scroll;
+        }
+        #txtNumber{
+            text-align: left;
+        }
+        h3{
+            text-align: center;
+        }
+        
+    </style>
+   
+
+</head>
+<body>
+    <div class="app">
+      
+      
+        <div class="head">
+            <h2>CRUD OPERATIONS</h2>
+
+        </div>
+
+
+        <div class="inputs">
+            <form method="get">
+                
+                <input id="fn_input" type="text" class="inputs_data" name="first_name" required placeholder="First Name">
+                <input id="sn_input" type="text" class="inputs_data" name="second_name" required placeholder="Second Name">
+                <input id="em_input" type="email" class="inputs_data" name="email" required placeholder="Email">
+                <input type="submit" id="btn1" value="Add User">
+               
+
+            </form>  
+             <br>
+            
+                {% if Customers %}
+                <input type="checkbox" onchange="check_all(this)"><span>  Check them All</span>
+                
+                <div class="emails">
+                    <table>
+                        <tr>
+                            <th>CHOOSE</th>
+                            <th>EMAIL</th>
+                            <th>FIRST NAME</th>
+                            <th>LAST NAME</th>
+                        </tr>
+                    {% for i in Customers %}
+                    <tr>
+                    <th><input id={{i.id}} type="checkbox" name="emails" value={{i.Email}}></th>
+                    <th><label>{{i.Email}}</label></th>
+                    <th><label>{{i.FirstName}}</label></th>
+                    <th><label>{{i.SecondName}}</label></th>
+                    <th><button class="update_button" onclick='updateCostumer("{{i.id}}","{{i.Email}}","{{i.FirstName}}","{{i.SecondName}}")'>update</button></th>
+                    </tr> 
+                    {% endfor %}
+                    </table>
+                </div>
+
+                <input type="submit" id="btn2" value="Delete" onclick="deleteCostumer()">
+                {% else %}
+                <h3>There is no data </h3>
+                {% endif %}
+
+                
+            
+
+        </div>
+
+    
+
+
+    </div>
+
+    
+
+    <script>
+        var checkboxes = document.getElementsByName("emails");
+
+        function check_all(myCheckbox){
+            
+            if(myCheckbox.checked == true){
+                checkboxes.forEach(function(check){
+                        check.checked = true;
+                });
+            }else{
+                checkboxes.forEach(checkbox => checkbox.checked = false);
+            }
+    
+        }
+
+        function deleteCostumer(){
+            
+            let checkArr = Array.prototype.slice.call(checkboxes).filter((c)=>{
+                return c.checked == true;
+            });
+            if(checkArr.length != 0){
+
+                checkArr = checkArr.map((c)=>{
+                    return c.attributes.id.value
+                })
+
+                window.location = (`delete/${checkArr.toString()}`);
+
+            }
+
+            
+
+        }
+        var globalId, fn, sn, em;
+        function updateCostumer(c_id, c_email, c_first_name, c_secondname){
+         
+            globalId = c_id;
+            fn = document.getElementById("fn_input");
+            sn = document.getElementById("sn_input");
+            em = document.getElementById("em_input");
+            fn.value = c_first_name;
+            sn.value = c_secondname;
+            em.value = c_email;
+
+            btn1 = document.getElementById("btn1")
+            btn1.value = "Update";
+            btn1.setAttribute("style", "background-color:red;");
+            btn1.setAttribute("onclick", "update_btn()");
+            btn1.setAttribute("type", "button");
+            console.log(btn1);
+        }
+
+        function update_btn(){
+            
+            window.location = (`update/${globalId}/${fn.value}/${sn.value}/${em.value}`);
+        }
+       
+        
+
+    </script>
+
+</body>
+</html>
